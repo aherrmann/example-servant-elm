@@ -1,0 +1,27 @@
+# load(
+#     "@rules_haskell//haskell:defs.bzl",
+#     "haskell_binary",
+#     "haskell_library",
+#     "haskell_repl",
+# )
+
+# haskell_library(
+#     name = "api",
+#     ...
+# )
+
+# haskell_library(
+#     name = "app",
+#     ...
+# )
+
+# haskell_binary(
+#     name = "server",
+#     ...
+# )
+
+# haskell_repl(
+#     name = "server@ghci",
+#     collect_data = False,
+#     deps = [":server"],
+# )

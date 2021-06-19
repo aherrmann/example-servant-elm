@@ -1,0 +1,32 @@
+# load("@bazel_skylib//rules:copy_file.bzl", "copy_file")
+# load("@bazel_skylib//rules:write_file.bzl", "write_file")
+
+# copy_file(
+#     name = "main_js",
+#     ...
+# )
+
+# write_file(
+#     name = "index_html",
+#     out = "index.html",
+#     content = ["""\
+# <!DOCTYPE HTML>
+# <html>
+# <head>
+#   <meta charset="UTF-8">
+#   <title>Main</title>
+#   <style>body { padding: 0; margin: 0; }</style>
+#   <script src="main.js"></script>
+# </head>
+#
+# <body>
+#   <pre id="elm"></pre>
+#   <script>var app = Elm.Main.init({node: document.getElementById("elm")});</script>
+# </body>
+# </html>"""],
+# )
+
+# filegroup(
+#     name = "assets",
+#     ...
+# )

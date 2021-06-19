@@ -1,6 +1,6 @@
-client/src/Api.elm
-client/elm-stuff/
-client/tests/elm-stuff/
-client/tests.js
-.stack-work/
-assets/index.html
+.bash_history
+bazel
+bazel-*
+.bazel-cache
+node_modules
+user.bazelrc

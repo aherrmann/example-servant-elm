@@ -1,0 +1,4 @@
+py_binary(
+    name = "generate_elm_repositories",
+    srcs = ["generate_elm_repositories.py"],
+)

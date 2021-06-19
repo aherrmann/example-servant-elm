@@ -1,7 +1,7 @@
 module Tests exposing (tests)
 
+import App exposing (FromUi(..), init, update)
 import Expect
-import Main exposing (FromUi(..), init, update)
 import Test exposing (..)
 
 
@@ -16,7 +16,7 @@ tests =
 
                     ( updatedModel, _ ) =
                         { model | addItemInput = "foo" }
-                            |> update (Main.FromUi AddItemButton)
+                            |> update (App.FromUi AddItemButton)
                 in
                 updatedModel.addItemInput
                     |> Expect.equal ""

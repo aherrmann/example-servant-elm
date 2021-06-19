@@ -5,9 +5,11 @@ module App where
 import           Control.Concurrent
 import           Control.Monad.IO.Class
 import           Data.Map
+import           Data.Maybe (fromMaybe)
 import           Network.Wai
-import           Network.Wai.MakeAssets
+import           Network.Wai.Application.Static
 import           Servant
+import           System.Environment (lookupEnv)
 
 import           Api
 
@@ -16,17 +18,19 @@ type WithAssets = Api :<|> Raw
 withAssets :: Proxy WithAssets
 withAssets = Proxy
 
-options :: Options
-options = Options "client"
-
 app :: IO Application
 app = serve withAssets <$> server
 
 server :: IO (Server WithAssets)
 server = do
-  assets <- serveAssets options
+  assets <- serveAssets
   db     <- mkDB
   return (apiServer db :<|> Tagged assets)
+
+serveAssets :: IO Application
+serveAssets = do
+  assetsDir <- fromMaybe "assets" <$> lookupEnv "ASSETS_DIR"
+  pure $ staticApp $ defaultFileServerSettings assetsDir
 
 apiServer :: DB -> Server Api
 apiServer db = listItems db :<|> getItem db :<|> postItem db :<|> deleteItem db

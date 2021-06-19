@@ -1,0 +1,92 @@
+workspace(
+    name = "example-servant-elm",
+    # -- Elm dependencies --------------------------------------------
+    # managed_directories = {
+    #     "@npm": ["node_modules"],
+    # },
+)
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+# -- assets dependencies ---------------------------------------------
+
+# http_archive(
+#     name = "bazel_skylib",
+#     sha256 = "1c531376ac7e5a180e0237938a2536de0c54d93f5c278634818e0efc952dd56c",
+#     urls = [
+#         "https://github.com/bazelbuild/bazel-skylib/releases/download/1.0.3/bazel-skylib-1.0.3.tar.gz",
+#         "https://mirror.bazel.build/github.com/bazelbuild/bazel-skylib/releases/download/1.0.3/bazel-skylib-1.0.3.tar.gz",
+#     ],
+# )
+
+# load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
+
+# bazel_skylib_workspace()
+
+# -- Haskell dependencies --------------------------------------------
+
+# http_archive(
+#     name = "rules_haskell",
+#     sha256 = "754fe99dc17c9db8744493a2ecfcfecf471683ec52a06b8d70d471096f2ec993",
+#     strip_prefix = "rules_haskell-9d74dd4c91711b89d948b59539f0e30831c13943",
+#     urls = ["https://github.com/tweag/rules_haskell/archive/9d74dd4c91711b89d948b59539f0e30831c13943.tar.gz"],
+# )
+
+# load("@rules_haskell//haskell:repositories.bzl", "rules_haskell_dependencies")
+
+# rules_haskell_dependencies()
+
+# load("@rules_haskell//haskell:toolchain.bzl", "rules_haskell_toolchains")
+
+# rules_haskell_toolchains(version = "8.8.3")
+
+# load("@rules_haskell//haskell:cabal.bzl", "stack_snapshot")
+
+# stack_snapshot(
+#     name = "stackage",
+#     packages = [
+#         ...
+#     ],
+#     snapshot = "lts-15.9",
+#     # stack_snapshot_json = "//:stackage_snapshot.json",
+# )
+
+# http_archive(
+#     name = "zlib.c",
+#     build_file = "//3rdparty:zlib.BUILD",
+#     sha256 = "c3e5e9fdd5004dcb542feda5ee4f0ff0744628baf8ed2dd5d66f8ca1197cb1a1",
+#     strip_prefix = "zlib-1.2.11",
+#     urls = ["https://zlib.net/zlib-1.2.11.tar.gz"],
+# )
+
+# -- Elm dependencies ------------------------------------------------
+
+# http_archive(
+#     name = "build_bazel_rules_nodejs",
+#     sha256 = "0fa2d443571c9e02fcb7363a74ae591bdcce2dd76af8677a95965edf329d778a",
+#     urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/3.6.0/rules_nodejs-3.6.0.tar.gz"],
+# )
+
+# load("@build_bazel_rules_nodejs//:index.bzl", "npm_install")
+
+# npm_install(
+#     name = "npm",
+#     exports_directories_only = True,
+#     package_json = "//:package.json",
+#     package_lock_json = "//:package-lock.json",
+# )
+
+# http_archive(
+#     name = "com_github_edschouten_rules_elm",
+#     sha256 = "908e286801d575623e161f480f45476e8474f75ae680803df9d606e099080fcc",
+#     strip_prefix = "rules_elm-10b9b4cc3800b905e5cc6863f004076a90f360fb",
+#     urls = ["https://github.com/EdSchouten/rules_elm/archive/10b9b4cc3800b905e5cc6863f004076a90f360fb.tar.gz"],
+# )
+
+# load("@com_github_edschouten_rules_elm//elm:deps.bzl", "elm_register_toolchains")
+
+# elm_register_toolchains()
+
+# load("//:elm_repositories.bzl", "elm_repositories")
+
+# elm_repositories()
