@@ -1,27 +1,48 @@
-# load(
-#     "@rules_haskell//haskell:defs.bzl",
-#     "haskell_binary",
-#     "haskell_library",
-#     "haskell_repl",
-# )
+load(
+    "@rules_haskell//haskell:defs.bzl",
+    "haskell_binary",
+    "haskell_library",
+    "haskell_repl",
+)
 
-# haskell_library(
-#     name = "api",
-#     ...
-# )
+haskell_library(
+    name = "api",
+    srcs = ["Api.hs"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "@stackage//:base",
+        "@stackage//:elm-bridge",
+        "@stackage//:servant",
+    ],
+)
 
-# haskell_library(
-#     name = "app",
-#     ...
-# )
+haskell_library(
+    name = "app",
+    srcs = ["App.hs"],
+    visibility = ["//server:__subpackages__"],
+    deps = [
+        ":api",
+        "@stackage//:base",
+        "@stackage//:containers",
+        "@stackage//:servant-server",
+        "@stackage//:wai",
+        "@stackage//:wai-app-static",
+    ],
+)
 
-# haskell_binary(
-#     name = "server",
-#     ...
-# )
+haskell_binary(
+    name = "server",
+    srcs = ["Main.hs"],
+    data = ["//assets"],
+    deps = [
+        ":app",
+        "@stackage//:base",
+        "@stackage//:warp",
+    ],
+)
 
-# haskell_repl(
-#     name = "server@ghci",
-#     collect_data = False,
-#     deps = [":server"],
-# )
+haskell_repl(
+    name = "server@ghci",
+    collect_data = False,
+    deps = [":server"],
+)

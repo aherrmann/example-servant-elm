@@ -1,41 +1,69 @@
-# load(
-#     "@com_github_edschouten_rules_elm//elm:def.bzl",
-#     "elm_binary",
-#     "elm_library",
-#     "elm_test",
-# )
-# load(
-#     "@rules_haskell//haskell:defs.bzl",
-#     "haskell_binary",
-# )
+load(
+    "@com_github_edschouten_rules_elm//elm:def.bzl",
+    "elm_binary",
+    "elm_library",
+    "elm_test",
+)
+load(
+    "@rules_haskell//haskell:defs.bzl",
+    "haskell_binary",
+)
 
-# haskell_binary(
-#     name = "generate-elm",
-#     ...
-# )
+haskell_binary(
+    name = "generate-elm",
+    srcs = ["GenerateElm.hs"],
+    deps = [
+        "//server/src:api",
+        "@stackage//:base",
+        "@stackage//:servant-elm",
+        "@stackage//:text",
+    ],
+)
 
-# genrule(
-#     name = "api-src",
-#     outs = ["src/Api.elm"],
-#     ...
-# )
+genrule(
+    name = "api-src",
+    srcs = [],
+    outs = ["src/Api.elm"],
+    cmd = "$(execpath :generate-elm) && cp client/src/Api.elm $@",
+    tools = [":generate-elm"],
+)
 
-# elm_library(
-#     name = "api",
-#     ...
-# )
+elm_library(
+    name = "api",
+    srcs = ["api-src"],
+    strip_import_prefix = "client/src",
+)
 
-# elm_library(
-#     name = "app",
-#     ...
-# )
+elm_library(
+    name = "app",
+    srcs = ["src/App.elm"],
+    strip_import_prefix = "client/src",
+    deps = [
+        ":api",
+        "@elm_package_bartavelle_json_helpers",
+        "@elm_package_elm_core",
+        "@elm_package_elm_html",
+        "@elm_package_elm_http",
+        "@elm_package_elm_json",
+        "@elm_package_elm_url",
+    ],
+)
 
-# elm_binary(
-#     name = "main",
-#     ...
-# )
+elm_binary(
+    name = "main",
+    main = "src/Main.elm",
+    visibility = ["//assets:__pkg__"],
+    deps = [
+        ":app",
+        "@elm_package_elm_browser",
+    ],
+)
 
-# elm_test(
-#     name = "tests",
-#     ...
-# )
+elm_test(
+    name = "tests",
+    main = "tests/Tests.elm",
+    deps = [
+        ":app",
+        "@elm_package_elm_explorations_test",
+    ],
+)

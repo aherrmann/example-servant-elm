@@ -1,6 +1,24 @@
-# load("@rules_haskell//haskell:defs.bzl", "haskell_test")
+load("@rules_haskell//haskell:defs.bzl", "haskell_test")
 
-# haskell_test(
-#     name = "spec",
-#     ...
-# )
+haskell_test(
+    name = "spec",
+    srcs = [
+        "AppSpec.hs",
+        "Spec.hs",
+    ],
+    data = ["//assets"],
+    ghcopts = ["-DHSPEC_DISCOVER=$(execpath @stackage-exe//hspec-discover)"],
+    tools = ["@stackage-exe//hspec-discover"],
+    deps = [
+        "//server/src:api",
+        "//server/src:app",
+        "@stackage//:base",
+        "@stackage//:hspec",
+        "@stackage//:http-client",
+        "@stackage//:http-types",
+        "@stackage//:servant",
+        "@stackage//:servant-client",
+        "@stackage//:transformers",
+        "@stackage//:warp",
+    ],
+)
