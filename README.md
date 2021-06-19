@@ -2,6 +2,10 @@
 
 Workshop on porting a Haskell and Elm project to be built with Bazel.
 
+- [Slides](./slides/zurihac_2021.pdf)
+- [Recording](https://youtu.be/GV5MG05rWO0)
+- [Completed build](https://github.com/aherrmann/example-servant-elm/tree/solution)
+
 ## Setup
 
 The project contains a [`Dockerfile`](docker/Dockerfile) that installs all
