@@ -1,4 +1,4 @@
-load("@rules_haskell//haskell:defs.bzl", "haskell_test")
+load("@rules_haskell//haskell:defs.bzl", "haskell_test", "haskell_repl")
 
 haskell_test(
     name = "spec",
@@ -21,4 +21,10 @@ haskell_test(
         "@stackage//:transformers",
         "@stackage//:warp",
     ],
+)
+
+haskell_repl(
+    name = "repl",
+    deps = [":spec"],
+    testonly = True,
 )
