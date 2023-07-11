@@ -6,6 +6,7 @@ haskell_test(
         "AppSpec.hs",
         "Spec.hs",
     ],
+    main_file = "Spec.hs",
     data = ["//assets"],
     ghcopts = ["-DHSPEC_DISCOVER=$(execpath @stackage-exe//hspec-discover)"],
     tools = ["@stackage-exe//hspec-discover"],

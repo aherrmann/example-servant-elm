@@ -32,5 +32,5 @@ data Item
   }
   deriving (Show, Eq)
 
-Elm.Derive.deriveBoth Elm.Derive.defaultOptions ''Item
 Elm.Derive.deriveBoth Elm.Derive.defaultOptions ''ItemId
+Elm.Derive.deriveBoth Elm.Derive.defaultOptions ''Item

@@ -1,14 +1,5 @@
-# Move Bazel output base to working directory
-startup --output_base=bazel
-
-# Enable Bazel disk cache
-build --disk_cache=.bazel-cache/disk
-build --repository_cache=.bazel-cache/repository
-fetch --repository_cache=.bazel-cache/repository
-sync --repository_cache=.bazel-cache/repository
-
 # Show test output on failure
 test --test_output=errors
 
 # Import local Bazel config if present
-try-import user.bazelrc
+try-import %workspace%/user.bazelrc

@@ -1,35 +1,14 @@
-workspace(
-    name = "example-servant-elm",
-    # -- Elm dependencies --------------------------------------------
-    managed_directories = {
-        "@npm": ["node_modules"],
-    },
-)
+workspace(name = "example-servant-elm")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-
-# -- assets dependencies ---------------------------------------------
-
-http_archive(
-    name = "bazel_skylib",
-    sha256 = "1c531376ac7e5a180e0237938a2536de0c54d93f5c278634818e0efc952dd56c",
-    urls = [
-        "https://github.com/bazelbuild/bazel-skylib/releases/download/1.0.3/bazel-skylib-1.0.3.tar.gz",
-        "https://mirror.bazel.build/github.com/bazelbuild/bazel-skylib/releases/download/1.0.3/bazel-skylib-1.0.3.tar.gz",
-    ],
-)
-
-load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
-
-bazel_skylib_workspace()
 
 # -- Haskell dependencies --------------------------------------------
 
 http_archive(
     name = "rules_haskell",
-    sha256 = "754fe99dc17c9db8744493a2ecfcfecf471683ec52a06b8d70d471096f2ec993",
-    strip_prefix = "rules_haskell-9d74dd4c91711b89d948b59539f0e30831c13943",
-    urls = ["https://github.com/tweag/rules_haskell/archive/9d74dd4c91711b89d948b59539f0e30831c13943.tar.gz"],
+    sha256 = "fb5a828fd5269d631412cef2476714c4d6510d922bc414b755307638e4f73434",
+    strip_prefix = "rules_haskell-8140a709a2fce93dcdaca44a65bb98399b30798a",
+    urls = ["https://github.com/tweag/rules_haskell/archive/8140a709a2fce93dcdaca44a65bb98399b30798a.tar.gz"],
 )
 
 load("@rules_haskell//haskell:repositories.bzl", "rules_haskell_dependencies")
@@ -38,13 +17,17 @@ rules_haskell_dependencies()
 
 load("@rules_haskell//haskell:toolchain.bzl", "rules_haskell_toolchains")
 
-rules_haskell_toolchains(version = "8.8.3")
+rules_haskell_toolchains(version = "9.4.5")
 
 load("@rules_haskell//haskell:cabal.bzl", "stack_snapshot")
 
 stack_snapshot(
     name = "stackage",
     components = {
+        "attoparsec": [
+            "lib",
+            "lib:attoparsec-internal",
+        ],
         "ghcid": [
             "exe",
             "lib",
@@ -54,6 +37,9 @@ stack_snapshot(
             "lib",
         ],
     },
+    components_dependencies = {
+        "attoparsec": """{"lib:attoparsec": ["lib:attoparsec-internal"]}""",
+    },
     extra_deps = {
         "zlib": ["@zlib.c"],
     },
@@ -61,7 +47,7 @@ stack_snapshot(
         "aeson",
         "base",
         "containers",
-        "elm-bridge-0.6.0",
+        "elm-bridge",
         "ghcid",
         "hspec",
         "hspec-discover",
@@ -77,30 +63,78 @@ stack_snapshot(
         "wai-app-static",
         "warp",
     ],
-    snapshot = "lts-15.9",
+    setup_deps = {
+        # TODO: Remove when tests are run with a ghc version containing Cabal >= 3.10
+        # See https://github.com/tweag/rules_haskell/issues/1871
+        "base-orphans": ["@Cabal//:Cabal"],
+        "bifunctors": ["@Cabal//:Cabal"],
+        "call-stack": ["@Cabal//:Cabal"],
+        "hspec": ["@Cabal//:Cabal"],
+        "hspec-core": ["@Cabal//:Cabal"],
+        "hspec-discover": ["@Cabal//:Cabal"],
+        "hspec-expectations": ["@Cabal//:Cabal"],
+        "HUnit": ["@Cabal//:Cabal"],
+        "invariant": ["@Cabal//:Cabal"],
+        "quickcheck-io": ["@Cabal//:Cabal"],
+        "semigroups": ["@Cabal//:Cabal"],
+        "tagged": ["@Cabal//:Cabal"],
+        "transformers-compat": ["@Cabal//:Cabal"],
+        "unliftio": ["@Cabal//:Cabal"],
+        "unliftio-core": ["@Cabal//:Cabal"],
+        "warp": ["@Cabal//:Cabal"],
+    },
+    snapshot = "lts-21.2",
     stack_snapshot_json = "//:stackage_snapshot.json",
+)
+
+# TODO: Remove when tests are run with a ghc version containing Cabal >= 3.10
+# See https://github.com/tweag/rules_haskell/issues/1871
+http_archive(
+    name = "Cabal",
+    build_file_content = """
+load("@rules_haskell//haskell:cabal.bzl", "haskell_cabal_library")
+haskell_cabal_library(
+    name = "Cabal",
+    srcs = glob(["Cabal/**"]),
+    verbose = False,
+    version = "3.6.3.0",
+    visibility = ["//visibility:public"],
+)
+""",
+    sha256 = "f69b46cb897edab3aa8d5a4bd7b8690b76cd6f0b320521afd01ddd20601d1356",
+    strip_prefix = "cabal-gg-8220-with-3630",
+    urls = ["https://github.com/tweag/cabal/archive/refs/heads/gg/8220-with-3630.zip"],
 )
 
 http_archive(
     name = "zlib.c",
     build_file = "//3rdparty:zlib.BUILD",
-    sha256 = "c3e5e9fdd5004dcb542feda5ee4f0ff0744628baf8ed2dd5d66f8ca1197cb1a1",
-    strip_prefix = "zlib-1.2.11",
-    urls = ["https://zlib.net/zlib-1.2.11.tar.gz"],
+    sha256 = "b3a24de97a8fdbc835b9833169501030b8977031bcb54b3b3ac13740f846ab30",
+    strip_prefix = "zlib-1.2.13",
+    urls = ["https://zlib.net/zlib-1.2.13.tar.gz"],
 )
 
 # -- Elm dependencies ------------------------------------------------
 
 http_archive(
     name = "build_bazel_rules_nodejs",
-    sha256 = "0fa2d443571c9e02fcb7363a74ae591bdcce2dd76af8677a95965edf329d778a",
-    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/3.6.0/rules_nodejs-3.6.0.tar.gz"],
+    sha256 = "5dd1e5dea1322174c57d3ca7b899da381d516220793d0adef3ba03b9d23baa8e",
+    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/5.8.3/rules_nodejs-5.8.3.tar.gz"],
 )
+
+load("@build_bazel_rules_nodejs//:repositories.bzl", "build_bazel_rules_nodejs_dependencies")
+
+build_bazel_rules_nodejs_dependencies()
+
+load("@rules_nodejs//nodejs:repositories.bzl", "nodejs_register_toolchains")
+
+nodejs_register_toolchains(name = "nodejs")
 
 load("@build_bazel_rules_nodejs//:index.bzl", "npm_install")
 
 npm_install(
     name = "npm",
+    args = ["--ignore-scripts"],
     exports_directories_only = True,
     package_json = "//:package.json",
     package_lock_json = "//:package-lock.json",
@@ -108,9 +142,9 @@ npm_install(
 
 http_archive(
     name = "com_github_edschouten_rules_elm",
-    sha256 = "908e286801d575623e161f480f45476e8474f75ae680803df9d606e099080fcc",
-    strip_prefix = "rules_elm-10b9b4cc3800b905e5cc6863f004076a90f360fb",
-    urls = ["https://github.com/EdSchouten/rules_elm/archive/10b9b4cc3800b905e5cc6863f004076a90f360fb.tar.gz"],
+    sha256 = "8a917d768c0aad6f73357e0e4ac00050a8ca1d8949aa0c367361d840892bf681",
+    strip_prefix = "rules_elm-944cd84f4e0dd101e9d632ca6fb2ceee15e8509a",
+    urls = ["https://github.com/EdSchouten/rules_elm/archive/944cd84f4e0dd101e9d632ca6fb2ceee15e8509a.tar.gz"],
 )
 
 load("@com_github_edschouten_rules_elm//elm:deps.bzl", "elm_register_toolchains")
