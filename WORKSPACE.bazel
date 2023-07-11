@@ -69,6 +69,7 @@ stack_snapshot(
         "base-orphans": ["@Cabal//:Cabal"],
         "bifunctors": ["@Cabal//:Cabal"],
         "call-stack": ["@Cabal//:Cabal"],
+        "ghcid": ["@Cabal//:Cabal"],
         "hspec": ["@Cabal//:Cabal"],
         "hspec-core": ["@Cabal//:Cabal"],
         "hspec-discover": ["@Cabal//:Cabal"],
