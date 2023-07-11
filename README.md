@@ -1,37 +1,14 @@
-# ZuriHac 2021 - Building Haskell with Bazel
+# Bazel Hour 2023 - Bazel + Haskell
 
-Workshop on porting a Haskell and Elm project to be built with Bazel.
+This example was previously demonstrated
+during a [workshop held at ZuriHac 2021](https://youtu.be/GV5MG05rWO0)
+and in a [blog post on the Tweag blog](https://www.tweag.io/blog/2022-10-20-bazel-example-servant-elm-1/).
 
-## Setup
+## Dependencies
 
-The project contains a [`Dockerfile`](docker/Dockerfile) that installs all
-required dependencies. Use as follows:
-
-1. Build the Docker image
-    ```
-    $ docker build -t zurihac2021 docker
-    ```
-2. Start a Docker container as a daemon
-    ```
-    $ docker run -d -v "$PWD:/work" --network host -it zurihac2021
-    cbc8a033b90dec3df4b470b157903fc23cc4c1a956a1370c8c6ca55b9aa63ef2
-    ```
-3. Open a shell session in the Docker container (can be executed multiple times)
-    ```
-    $ docker exec -it -w /work --detach-keys="ctrl-@" cbc8a033b90d bash
-    ```
-
-You can query for the Docker container's id using
-```
-$ docker ps
-CONTAINER ID   IMAGE         COMMAND   ...
-cbc8a033b90d   zurihac2021   "bash"    ...
-```
-
-You can then stop that container using
-```
-$ docker stop cbc8a033b90d
-```
+* Bazel, we recommend to install it via [Bazelisk](https://github.com/bazelbuild/bazelisk).
+* [rules_haskell dependencies](https://rules-haskell.readthedocs.io/en/latest/haskell.html#before-you-begin).
+* (optional) [bazel-watcher][bazel-watcher].
 
 ## Generate Elm Repositories
 
@@ -79,7 +56,7 @@ any of its sources change, like so.
 ```
 $ bazel build @stackage-exe//ghcid
 $ ASSETS_DIR=bazel-bin/assets \
-    ghcid --command="bazel run //server/src:serve@ghci" \
+    ghcid --command="bazel run //server/src:server@ghci" \
       --test=Main.main \
       --reload=bazel-bin/assets
 ```
