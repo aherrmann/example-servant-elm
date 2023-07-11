@@ -9,6 +9,7 @@ and in a [blog post on the Tweag blog](https://www.tweag.io/blog/2022-10-20-baze
 * Bazel, we recommend to install it via [Bazelisk](https://github.com/bazelbuild/bazelisk).
 * [rules_haskell dependencies](https://rules-haskell.readthedocs.io/en/latest/haskell.html#before-you-begin).
 * (optional) [bazel-watcher][bazel-watcher].
+* (optional) [ghcid][ghcid].
 
 ## Generate Elm Repositories
 
@@ -54,9 +55,11 @@ You can use [`ghcid`][ghcid] to continuously reload the backend whenever
 any of its sources change, like so.
 
 ```
-$ bazel build @stackage-exe//ghcid
 $ ASSETS_DIR=bazel-bin/assets \
-    ghcid --command="bazel run //server/src:server@ghci" \
+    bazel run @stackage-exe//ghcid \
+      --run_under="cd $PWD;" \
+      -- \
+      --command="bazel run //server/src:server@ghci" \
       --test=Main.main \
       --reload=bazel-bin/assets
 ```
@@ -64,6 +67,17 @@ $ ASSETS_DIR=bazel-bin/assets \
 This will load the Haskell code into a GHCi session and run the server in
 the interpreter. It will reload the session and restart the server
 whenever any of the Haskell source files or the assets change.
+
+Similarly, you can use `ghcid` to continuously reload and rerun a test-suite,
+like so.
+
+```
+$ bazel run @stackage-exe//ghcid \
+    --run_under="cd $PWD;" \
+    -- \
+    --command="bazel run //server/test:spec@repl" \
+    --test="Test.Hspec.hspec AppSpec.spec"
+```
 
 Note, if the dependency graph changes, e.g. when you edit a `BUILD.bazel`
 file, then you will have to restart `ghcid` itself.
